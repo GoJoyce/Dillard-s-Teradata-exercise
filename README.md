@@ -130,3 +130,13 @@
   WHERE t.stype = 'R'
   GROUP BY s.state, s.zip
   ORDER BY SUM(t.amt) DESC;
+  
+  
+ # What is the deptdesc of the departments that have the top 3 greatest numbers of skus from the skuinfo table associated with them?
+	SELECT s.sku, d.deptdesc, COUNT(skuinfo.sku)
+	FROM skstinfo s RIGHT JOIN skuinfo
+	ON s.sku = skuinfo.sku
+	LEFT JOIN deptinfo d
+	ON skuinfo.dept = d.dept
+	GROUP BY s.sku, d.deptdesc
+	ORDER BY COUNT(skuinfo.sku) DESC;
