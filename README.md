@@ -148,3 +148,12 @@
 	SELECT COUNT(msa), MIN(msa_pop), MAX(msa_income)
 	FROM store_msa
 	WHERE state = 'NC';
+
+
+# Exercise 13: What is the suggested retail price of all the skus in the “reebok” department with the “skechers” brand and a “wht/saphire” color?
+	SELECT DISTINCT sk.retail
+	FROM skstinfo sk JOIN skuinfo s
+	ON sk.sku = s.sku
+	JOIN deptinfo d
+	ON s.dept = d.dept
+	WHERE s.deptdesc = 'REEBOK' AND s.brand = 'skechers' AND s.color = 'wht/saphire';
