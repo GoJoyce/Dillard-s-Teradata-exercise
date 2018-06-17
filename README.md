@@ -133,7 +133,7 @@
 	ORDER BY SUM(t.amt) DESC;
   
   
- # What is the deptdesc of the departments that have the top 3 greatest numbers of skus from the skuinfo table associated with them?
+# Exercise 11: What is the deptdesc of the departments that have the top 3 greatest numbers of skus from the skuinfo table associated with them?
 	SELECT s.sku, d.deptdesc, COUNT(skuinfo.sku)
 	FROM skstinfo s RIGHT JOIN skuinfo
 	ON s.sku = skuinfo.sku
@@ -141,3 +141,10 @@
 	ON skuinfo.dept = d.dept
 	GROUP BY s.sku, d.deptdesc
 	ORDER BY COUNT(skuinfo.sku) DESC;
+
+
+# Exercise 12: The store_msa table provides population statistics about the geographic location around a store. Using one query to retrieve your answer, how many MSAs are there within the state of North Carolina (abbreviated “NC”), and within these MSAs, what is the lowest population level (msa_pop) and highest income level (msa_income)?
+
+	SELECT COUNT(msa), MIN(msa_pop), MAX(msa_income)
+	FROM store_msa
+	WHERE state = 'NC';
