@@ -132,6 +132,7 @@
   
   
 #Exercise 11: What is the deptdesc of the departments that have the top 3 greatest numbers of skus from the skuinfo table associated with them?
+
 	SELECT s.sku, d.deptdesc, COUNT(skuinfo.sku)
 	FROM skstinfo s RIGHT JOIN skuinfo
 	ON s.sku = skuinfo.sku
@@ -149,6 +150,7 @@
 
 
 #Exercise 13: What is the suggested retail price of all the skus in the “reebok” department with the “skechers” brand and a “wht/saphire” color?
+
 	SELECT DISTINCT sk.retail
 	FROM skstinfo sk JOIN skuinfo s
 	ON sk.sku = s.sku
