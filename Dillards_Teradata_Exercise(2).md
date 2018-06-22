@@ -108,3 +108,61 @@ sales days available in the transaction table for that group.
 	ON s.sku = r.sku
 	ORDER by r.std desc;
 
+
+
+#Exercise 8: Examine all the transactions for the sku with the greatest standard deviation in sprice, but only consider skus that are part of more than 100 transactions. 
+
+
+
+#Exercise 9: What was the average daily revenue Dillard’s brought in during each month of the year? 
+
+
+	SELECT DISTINCT (extract(MONTH from saledate) || ' /' || extract(YEAR from saledate)) as ndate
+			,(SUM(amt)/COUNT(distinct saledate)) as dailyrev
+	FROM trnsact 
+	GROUP by ndate
+	WHERE stype = 'p'
+	HAVING COUNT(DISTINCT saledate) > 20 
+	ORDER by dailyrev desc;
+	
+#Exercise 10: Which department, in which city and state of what store, had the greatest % increase in average daily sales revenue from November to December? 
+
+
+	SELECT s.store, s.city, s.state, d.deptdesc, 
+	       SUM(CASE when extract(month from saledate)=11 then amt end) as November,
+	       COUNT(DISTINCT (CASE WHEN EXTRACT(MONTH from saledate) ='11' then saledate END)) as Nov_numdays, 
+	       SUM(CASE when extract(month from saledate)=12 then amt end) as December,
+	       COUNT(DISTINCT (CASE WHEN EXTRACT(MONTH from saledate) ='12' then saledate END)) as Dec_numdays, 
+	       ((December/Dec_numdays)-(November/Nov_numdays))/(November/Nov_numdays)*100 AS bump
+	FROM trnsact t 
+	JOIN strinfo s ON t.store=s.store 
+	JOIN skuinfo si ON t.sku=si.sku 
+	JOIN deptinfo d ON si.dept=d.dept
+	WHERE t.stype='P' and t.store||EXTRACT(YEAR from t.saledate)||EXTRACT(MONTH from t.saledate) IN (SELECT store||EXTRACT(YEAR from saledate)||EXTRACT(MONTH from saledate)
+		FROM trnsact
+		GROUP BY store, EXTRACT(YEAR from saledate), EXTRACT(MONTH from saledate)
+		HAVING COUNT(DISTINCT saledate)>= 20)
+	GROUP BY s.store, s.city, s.state, d.deptdesc 
+	ORDER BY bump DESC;
+	
+	
+#Exercise 11: What is the city and state of the store that had the greatest decrease in average daily revenue from August to September? 
+
+
+
+	SELECT s.store, s.city, s.state, d.deptdesc, 
+	    SUM(CASE when extract(month from saledate)=8 then amt end) as August,
+	    COUNT(DISTINCT (CASE WHEN EXTRACT(MONTH from saledate) ='8' then saledate END)) as Aug_numdays, 
+	    SUM(CASE when extract(month from saledate)=9 then amt end) as September,
+	    COUNT(DISTINCT (CASE WHEN EXTRACT(MONTH from saledate) ='9' then saledate END)) as Sep_numdays, 
+	    ((September/Sep_numdays)-(August/Aug_numdays))/(August/Aug_numdays)*100 AS bump
+	FROM trnsact t JOIN strinfo s ON t.store=s.store 
+	JOIN skuinfo sk ON t.sku=sk.sku 
+	JOIN deptinfo d ON sk.dept=d.dept
+	WHERE t.stype='P' and t.store||EXTRACT(YEAR from t.saledate)||EXTRACT(MONTH from t.saledate) IN (SELECT store||EXTRACT(YEAR from saledate)||EXTRACT(MONTH from saledate)
+		FROM trnsact
+		GROUP BY store, EXTRACT(YEAR from saledate), EXTRACT(MONTH from saledate)
+		HAVING COUNT(DISTINCT saledate)>= 20)
+	GROUP BY s.store, s.city, s.state, d.deptdesc
+	ORDER BY bump ASC;
+
