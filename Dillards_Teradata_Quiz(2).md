@@ -15,7 +15,7 @@
 	GROUP BY 1
 	ORDER BY month12-month11 DESC;
 	
-# Q4. What vendor has the greatest number of distinct skus in the transaction table that do not exist in the skstinfo table? (Remember that vendors are listed as distinct numbers in our data set).
+#Q4. What vendor has the greatest number of distinct skus in the transaction table that do not exist in the skstinfo table? (Remember that vendors are listed as distinct numbers in our data set).
 SELECT b.vendor, COUNT(DISTINCT a.sku)
 FROM (SELECT DISTINCT t.sku FROM TRNSACT t LEFT JOIN SKSTINFO s ON t.sku = s.sku WHERE s.sku IS NULL) AS a,  SKUINFO AS b
 WHERE a.sku = b.sku
